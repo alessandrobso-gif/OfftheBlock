@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Nike Jordan 3 - OffTheBlock</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+#toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #FFD700;
+  color: black;
+  padding: 12px 20px;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.4s;
+  font-weight: bold;
+  z-index: 2000;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* NAVBAR */
+
+.navbar {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,215,0,0.1);
+  z-index: 1000;
+}
+@font-face {
+  font-family: 'BornNeo';
+  src: url('../fonts/Bornneo.ttf');
+}
+
+.brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'BornNeo', sans-serif !important;
+  font-size: 37px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(43, 1, 255, 0.89);
+}
+
+
+
+body {
+  margin: 0;
+  background: #0a0a0a;
+  color: #FFD700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.product-page {
+  display: flex;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 120px auto;
+  padding: 20px;
+}
+
+/* IMÁGENES */
+.product-images {
+  flex: 1;
+  max-width: 550px;
+}
+
+.product-images img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.thumbs img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  opacity: 0.6;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.thumbs img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  border: 2px solid gold;
+}
+
+.thumbs img.active {
+  opacity: 1;
+  border: 2px solid gold;
+}
+
+
+/*boton eliminar*/
+
+.remove-btn {
+  background: transparent;
+  border: 1px solid gold;
+  color: gold;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 4px 8px;
+}
+
+/* INFO */
+
+.product-info {
+  max-width: 400px;
+}
+
+.product-info h1 {
+  color: white;
+}
+
+.price {
+  font-size: 20px;
+  color: white;
+}
+
+/* SELECT */
+.size {
+  width: 100%;
+  padding: 12px;
+  margin: 20px 0;
+  background: black;
+  color: gold;
+  border: 1px solid gold;
+}
+
+/* BOTONES */
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions .btn {
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.btn {
+  background: #FFD700;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 8px;
+  color: black;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.btn-cart {
+  background: gold;
+  color: black;
+}
+
+.btn-buy {
+  background: #25D366;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+/*Imagenes*/
+
+.image-container {
+  height: 450px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid gold;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: 0.3s;
+  position: relative;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  transition: transform 0.4s ease;
+}
+
+.image-container:hover img {
+  transform: scale(1.1);
+}
+
+.image-container:hover {
+  transform: translateY(-5px);
+}
+
+
+/* FLECHAS */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  background: rgba(0,0,0,0.6);
+  pointer-events: none;
+  transition: 0.3s;
+  border: none;
+  color: gold;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.image-container:hover .arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.arrow:hover {
+  background: gold;
+  color: black;
+}
+
+.arrow.left {
+  left: 10px;
+}
+
+.arrow.right {
+  right: 10px;
+}
+
+/* MINI IMÁGENES MÁS PRO */
+.thumbs {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.thumbs img {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.5;
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+
+.thumbs img:hover {
+  opacity: 1;
+  border: 2px solid gold;
+}
+
+.product-images {
+  flex: 1;
+  max-width: 500px;
+}
+
+
+/* CENTRAR TODO */
+.product-page {
+  display: flex;
+  gap: 80px;
+  max-width: 1100px;
+  margin: 120px auto;
+  align-items: center;
+}
+
+/* MINIATURAS MEJOR */
+.thumbs img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.arrow {
+  z-index: 10;
+}
+
+.menu-icon,
+.cart,
+.btn,
+.menu a {
+  cursor: pointer;
+}
+
+.menu {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 15px;
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  min-width: 200px;
+  z-index: 2000;
+}
+
+.menu.active {
+  display: flex;
+}
+
+.menu a {
+  color: gold;
+  text-decoration: none;
+  margin: 5px 0;
+}
+
+
+.cart {
+  cursor: pointer;
+}
+
+.cart-box h2 {
+  margin-bottom: 20px;
+}
+
+.cart-box p {
+  opacity: 0.7;
+}
+
+.cart-box.active {
+  transform: translateX(0);
+}
+
+.cart-box {
+  position: fixed;
+  right: 0;
+  top: 90px;
+  width: 300px;
+  height: calc(100% - 90px);
+  background: #111;
+  padding: 20px;
+  transform: translateX(100%);
+  transition: 0.3s;
+  overflow-y: auto;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+/* FOOTER */
+
+.footer {
+  background: #000;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255,215,0,0.1);
+}
+
+.footer a {
+  color: #FFD700;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.footer a:hover {
+  opacity: 0.7;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  text-align: center;
+}
+
+.footer-logo img {
+  height: 100px;
+  filter: drop-shadow(0 0 8px #FFD700);
+  margin-bottom: 5px;
+}
+
+.socials {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.socials a {
+  color: #FFD700;
+  font-size: 22px;
+  transition: 0.3s;
+  text-decoration: none;
+  text-shadow: #FFD700 0px 0px 6px;
+}
+
+.socials a:hover {
+  transform: scale(1.2);
+  opacity: 0.3;
+}
+
+.copy {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* INFO */
+
+.info {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* GRID */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* CARD BASE (🔥 reutilizable) */
+.info-card {
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  min-height: 160px;
+
+  border: 1px solid rgba(255,215,0,0.15);
+  box-shadow: 0 0 8px rgba(255,215,0,0.15);
+
+  transition: all 0.25s ease;
+}
+
+/* HOVER (🔥 detalle premium) */
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 15px rgba(255,215,0,0.25);
+}
+
+/* TEXTO */
+.info-card p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-card h3 {
+  margin-bottom: 8px;
+}
+
+/* CARD GRANDE */
+.info-wide {
+  max-width: 480px;
+  margin: 40px auto;
+
+  background: #111;
+  padding: 25px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(255,215,0,0.2);
+  box-shadow: 0 0 12px rgba(255,215,0,0.2);
+
+  transition: all 0.25s ease;
+}
+
+.info-wide:hover {
+  transform: translateY(-4px);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <div class="brand-center">OFFTHEBLOCK</div>
+  <div class="cart" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
+</div>
+
+<div class="menu" id="menu">
+  <a href="../index.html">Inicio</a>
+  <a href="../index.html#sneakers">Sneakers</a>
+  <a href="../index.html#accesorios">Accesorios</a>
+  <a href="../index.html#info">Información</a>
+</div>
+
+<div class="cart-box" id="cartBox">
+  <h2>Carrito</h2>
+
+  <ul id="cartItems"></ul>
+
+  <p>Total: S/ <span id="total">0</span></p>
+
+  <button class="btn" onclick="checkout()">Pagar</button>
+</div>
+
+<div class="product-page">
+
+  <!-- IZQUIERDA -->
+ <div class="product-images">
+
+  <div class="image-container">
+    <button class="arrow left" onclick="prevImg()">❮</button>
+
+    <img id="main-img" src="https://picsum.photos/100">
+
+    <button class="arrow right" onclick="nextImg()">❯</button>
+  </div>
+
+  <div class="thumbs">
+    <img src="https://picsum.photos/100" onclick="setImg(0)">
+    <img src="https://picsum.photos/200" onclick="setImg(1)">
+    <img src="https://picsum.photos/300" onclick="setImg(2)">
+  </div>
+
+</div>
+
+  <!-- DERECHA -->
+  <div class="product-info">
+    <h1>Nike Jordan 3</h1>
+    <p class="price">S/ 420</p>
+
+    <select class="size" id="size">
+      <option value="">Seleccionar talla</option>
+      <option>40</option>
+      <option>41</option>
+      <option>42</option>
+    </select>
+
+    <div class="actions">
+      <button class="btn btn-cart" onclick="addToCart('Nike Jordan 3', 420)">
+        🛒 Agregar
+      </button>
+
+      <button class="btn btn-buy" onclick="buyWhatsApp()">
+        📲 Comprar
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<section id="info" class="info container">
+  <h2>INFORMACIÓN</h2>
+
+  <div class="info-grid">
+
+    <div class="info-card">
+      <h3>🚚 ENVÍOS</h3>
+      <p>
+        Llegamos a todo el Perú 🇵🇪<br>
+        Tu pedido directo a tu puerta por courier.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3>💳 PAGOS</h3>
+      <p>Yape y transferencias.</p>
+    </div>
+
+  </div>
+
+  <div class="info-card info-wide">
+    <h3>📦 INFORMACIÓN DE COMPRA</h3>
+
+    <p><strong>Entrega inmediata:</strong><br>
+    2 a 5 días según ubicación.</p>
+
+    <p><strong>Productos por pedido (PDF):</strong><br>
+    3 a 4 semanas (envío estándar).<br>
+    Envío rápido disponible.</p>
+
+    <p><strong>Pago:</strong><br>
+    65% adelantado / 35% contra entrega.</p>
+
+    <p><strong>Política:</strong><br>
+    No se aceptan devoluciones, salvo fallas de fábrica.</p>
+
+    <p><strong>Contacto:</strong><br>
+    Escríbenos por WhatsApp.</p>
+  </div>
+
+</section>
+
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-logo">
+      <img src="../transparente.png" alt="OTB">
+    </div>
+    <div>📱 +51 961 285 595</div>
+
+    <div class="socials">
+      <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+      <a href="https://wa.me/51942320393" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="https://tiktok.com" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+  </div>
+
+  <p class="copy">© 2026 OffTheBlock</p>
+</footer>
+
+
+<div id="toast"></div>
+<script>
+
+function setImg(index) {
+  current = index;
+  updateImage();
+
+  document.querySelectorAll(".thumbs img").forEach((img, i) => {
+    img.classList.toggle("active", i === index);
+  });
+}
+
+function changeImg(el){
+  document.getElementById("main-img").src = el.src;
+}
+
+
+let images = [
+  "https://picsum.photos/100",
+  "https://picsum.photos/200",
+  "https://picsum.photos/300"
+];
+
+let current = 0;
+
+function updateImage() {
+  document.getElementById("main-img").src = images[current];
+}
+
+function nextImg() {
+  current = (current + 1) % images.length;
+  updateImage();
+}
+
+function prevImg() {
+  current = (current - 1 + images.length) % images.length;
+  updateImage();
+}
+
+function setImg(index) {
+  current = index;
+  updateImage();
+}
+
+
+
+function toggleCart(){
+  document.getElementById("cartBox").classList.toggle("active");
+}
+
+// TOAST
+
+function showToast(product){
+  const toast = document.getElementById("toast");
+  toast.innerText = product + " añadido 🛒";
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+// WHATSAPP
+
+function buyWhatsApp(){
+  let size = document.getElementById("size").value;
+
+  let message = `Hola, quiero comprar:\nNike Jordan 3 - S/ 420\nTalla: ${size || "No especificada"}`;
+
+  window.open("https://wa.me/51942320393?text=" + encodeURIComponent(message));
+}
+
+// NAVBAR
+
+function toggleMenu(){
+  document.getElementById("menu").classList.toggle("active");
+}
+const moneda = "S/";
+let cart = [];
+
+// AGREGAR PRODUCTO
+
+function addToCart(name, price){
+  cart.push({name, price});
+  renderCart();
+  showToast(name);
+}
+
+// RENDER DEL CARRITO
+
+function renderCart(){
+  const cartItems = document.getElementById("cartItems");
+  const count = document.getElementById("count");
+  const totalEl = document.getElementById("total");
+
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+
+    let li = document.createElement("li");
+    li.innerHTML = `
+      ${item.name} - ${moneda} ${item.price}
+      <button class="remove-btn" onclick="removeFromCart(${index})">Eliminar</button>
+    `;
+
+    cartItems.appendChild(li);
+  });
+
+  count.innerText = cart.length;
+  totalEl.innerText = total;
+}
+
+// ELIMINAR
+
+function removeFromCart(index){
+  cart.splice(index, 1);
+  renderCart();
+}
+
+// PAGAR
+function checkout(){
+  let message = "Pedido OffTheBlock:\n";
+
+  cart.forEach(item => {
+    message += `${item.name} - ${moneda} ${item.price}\n`;
+  });
+
+  window.open("https://wa.me/51942320393?text=" + encodeURIComponent(message));
+}
+
+const cartBox = document.getElementById("cartBox");
+
+let timeout;
+
+cartBox.addEventListener("mouseleave", () => {
+  timeout = setTimeout(() => {
+    cartBox.classList.remove("active");
+  }, 300);
+});
+
+cartBox.addEventListener("mouseenter", () => {
+  clearTimeout(timeout);
+});
+
+const menu = document.getElementById("menu");
+const icon = document.querySelector(".menu-icon");
+
+icon.addEventListener("click", () => {
+  menu.classList.add("active");
+});
+
+menu.addEventListener("mouseleave", () => {
+  menu.classList.remove("active");
+});
+
+
+</script>
+
+</body>
+</html>

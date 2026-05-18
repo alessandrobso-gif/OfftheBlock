@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OffTheBlock</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<style>
+
+/* BASE */
+
+body {
+  margin: 0;
+  background-color: #0a0a0a;
+  color: #FFD700;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,215,0,0.1);
+  z-index: 1000;
+}
+@font-face {
+  font-family: 'bornneo.ttf';
+  src: url('./fonts/Bornneo.ttf');
+}
+
+
+section {
+  scroll-margin-top: 140px;
+}
+
+/* MENU ICON */
+
+.menu-icon {
+  font-size: 22px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.menu-icon:hover {
+  background: rgba(255,215,0,0.1);
+}
+
+/* TEXTO CENTRO */
+
+.brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'bornneo.ttf', sans-serif !important;
+  font-size: 37px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(43, 1, 255, 0.89) ;
+  
+}
+
+/* CARRITO */
+.cart {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.cart:hover {
+  background: rgba(255,215,0,0.1);
+}
+
+/* MENU DESPLEGABLE */
+
+.menu {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 15px;
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  min-width: 200px;
+  z-index: 2000;
+}
+
+.menu.active {
+  display: flex;
+}
+
+.menu a {
+  color: #FFD700;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 12px 8px;
+  border-radius: 6px;
+  display: block;
+
+}
+
+.menu a:hover {
+  background: rgba(255,215,0,0.1);
+}
+
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+/* BOTONES */
+
+.catalogo-botones {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Base de botones */
+
+.btn-catalogo {
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: 0.3s;
+  border: 1px solid;
+}
+
+/* ECO 🌱 */
+
+.btn-catalogo.eco {
+  color: #00ff88;
+  border-color: #00ff88;
+}
+
+.btn-catalogo.eco:hover {
+  background: #00ff88;
+  color: black;
+}
+
+/* VIP 💎 */
+
+.btn-catalogo.vip {
+  color: gold;
+  border-color: gold;
+  box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+
+.btn-catalogo.vip:hover {
+  background: gold;
+  color: black;
+}
+
+.btn {
+  background: #FFD700;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 8px;
+  color: black;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.whatsapp {
+  background: #25D366;
+  color: white;
+}
+
+.whatsapp:hover {
+  background: #1ebe5d;
+}
+
+.btn {
+  background: #FFD700;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: black;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255,215,0,0.4);
+}
+
+/* BOTONES EN FILA */
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-group .btn {
+  flex: 1; /* 🔥 se reparten el espacio */
+  text-align: center;
+  font-size: 12px;
+  padding: 8px;
+}
+
+/* PRODUCTOS */
+
+.container {
+  padding: 100px 20px;
+  text-align: center;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+.card {
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+ border: 1px solid rgba(255,215,0,0.1);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: gold;
+  box-shadow: 0 0 15px rgba(255,215,0,0.3)
+  0 0 0 20px rgba(255,215,0,0.15);
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+.card h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card p {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+}
+
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+/* CARRITO */
+
+.cart-box {
+  position: fixed;
+  right: 0;
+  top: 90px;
+  width: 300px;
+  height: calc(100% - 90px);
+  background: #111;
+  padding: 20px;
+  transform: translateX(100%);
+  transition: 0.3s;
+  overflow-y: auto;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+.cart-box.active {
+  transform: translateX(0);
+}
+
+/* TOAST */
+
+#toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #FFD700;
+  color: black;
+  padding: 12px 20px;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.4s;
+  font-weight: bold;
+  z-index: 2000;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* INFO */
+
+.info {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+
+.info-grid div {
+  background: #111;
+  padding: 25px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 🔥 CLAVE */
+  align-items: center;
+  text-align: center;
+  min-height: 180px;
+  box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+
+.info-grid div p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.info-grid div p {
+  margin: 0;
+}
+
+.info-wide {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #111;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+
+/* FOOTER */
+
+.footer {
+  background: #000;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255,215,0,0.1);
+}
+
+.footer a {
+  color: #FFD700;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.footer a:hover {
+  opacity: 0.7;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  text-align: center;
+}
+
+.footer-logo img {
+  height: 100px;
+  filter: drop-shadow(0 0 8px #FFD700);
+  margin-bottom: 5px;
+}
+
+.socials {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.socials a {
+  color: #FFD700;
+  font-size: 22px;
+  transition: 0.3s;
+  text-decoration: none;
+  text-shadow: #FFD700 0px 0px 6px;
+}
+
+.socials a:hover {
+  transform: scale(1.2);
+  opacity: 0.3;
+}
+
+
+.copy {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+.sneakers-drop {
+  padding: 120px 20px 40px;
+  text-align: center;
+}
+
+.sneakers-drop h2 {
+  font-family: 'Bebas Neue';
+  font-size: 40px;
+  letter-spacing: 3px;
+}
+
+.sneakers-drop p {
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+html {
+  scroll-behavior: smooth;
+}
+/* SECCIÓN EXCLUSIVA */
+.exclusive {
+  padding: 80px 20px 40px; /* menos espacio arriba */
+  text-align: center;
+  background: linear-gradient(180deg, #000, #0a0a0a);
+}
+
+.exclusive h2 {
+  font-family: 'Bebas Neue';
+  font-size: 42px;
+  letter-spacing: 3px;
+}
+
+.exclusive p {
+  opacity: 0.7;
+  margin-bottom: 25px;
+}
+
+.exclusive-box {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.remove-btn {
+  background: transparent;
+  border: 1px solid gold;
+  color: gold;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 4px 8px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="menu-container">
+
+  <div class="navbar">
+    <div class="menu-icon">☰</div>
+    <div class="brand-center">OFFTHEBLOCK</div>
+    <div class="cart" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
+  </div>
+
+  <div class="menu" id="menu">
+    <a href="../index.html">Inicio</a>
+    <a href="../index.html#sneakers">Sneakers</a>
+    <a href="../index.html#accesorios">Accesorios</a>
+    <a href="../index.html#info">Información</a>
+  </div>
+
+</div>
+
+<section class="exclusive">
+
+  <h2>DROP EXCLUSIVO 💎</h2>
+
+  <p>
+    Sneakers exclusivos bajo pedido.
+    Reserva con el 65% y asegura tu par.
+  </p>
+
+  <div class="exclusive-box">
+   <a href="/catalogoesonomy2026.pdf" target="_blank" class="btn-catalogo eco">
+  📖 Ver Catálogo
+</a>
+
+  <a href="/catalogovip2026.pdf" target="_blank" class="btn-catalogo vip">
+    💎 Catálogo VIP
+  </a>
+  </div>
+
+</section>
+
+<section class="container" id="sneakers"> 
+  <h2>SNEAKERS DISPONIBLES 🔥</h2>
+  <p>Entrega inmediata. Sin esperas.</p>
+
+  <div class="catalogo-grid">
+
+    <div class="card">
+      <a href="snkrdispo/sdcasilla1.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+  
+    <div class="card">
+      <a href="snkrdispo/sdcasilla2.html">
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="snkrdispo/sdcasilla3.html">
+        
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+     <a href="snkrdispo/sdcasilla4.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="snkrdispo/sdcasilla5.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="snkrdispo/sdcasilla6.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="ropa" class="container">
+  <h2>ROPA</h2>
+  <p>Stock disponible listo para envío.</p>
+
+  <div class="catalogo-grid">
+
+    <div class="card">
+
+      <a href="ropacards/ropacard1.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="ropacards/ropacard2.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="ropacards/ropacard3.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+     <a href="ropacards/ropacard4.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+     <a href="ropacards/ropacard5.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="ropacards/ropacard6.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="ropacards/ropacard7.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="ropacards/ropacard8.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<section id="accesorios" class="container">
+  <h2>ACCESORIOS</h2>
+  <p>Complementos exclusivos OffTheBlock.</p>
+
+  <div class="catalogo-grid">
+
+    <div class="card">
+
+     <a href="accsriosgroup/acccard1.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="accsriosgroup/acccard2.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="accsriosgroup/acccard3.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+     <a href="accsriosgroup/acccard4.html">
+      
+       <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+     <a href="accsriosgroup/acccard5.html">  
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="accsriosgroup/acccard6.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="accsriosgroup/acccard7.html">
+     
+       <img src="https://picsum.photos/300">
+       </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="accsriosgroup/acccard8.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="pants" class="container">
+  <h2>PANTS</h2>
+  <p>Calzado de alta calidad para tu estilo.</p>
+
+  <div class="catalogo-grid">
+
+    <div class="card">
+      
+     <a href="pntscards/pantcard1.html">
+
+      <img src="https://picsum.photos/300">
+     </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <a href="pntscards/pantcard2.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <a href="pntscards/pantcard3.html">
+        <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+
+    <div class="card">
+
+      <a href="pntscards/pantcard4.html">
+
+      <img src="https://picsum.photos/300">
+      </a>
+      <h3>Nike Jordan 3</h3>
+      <p class="price" data-price="420">S/ 420</p>
+
+      <div class="btn-group">
+        <div class="btn add-cart">🛒 Agregar</div>
+        <div class="btn whatsapp buy-now">📲 Comprar</div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+
+<section id="info" class="info container">
+  <h2>INFORMACIÓN</h2>
+
+  <div class="info-grid">
+
+    <div>
+      <h3>🚚 ENVÍOS</h3>
+      <p>
+        Llegamos a todo el Perú 🇵🇪<br>
+        Tu pedido directo a tu puerta por courier.
+      </p>
+    </div>
+
+    <div>
+      <h3>💳 PAGOS</h3>
+      <p>Yape y transferencias.</p>
+    </div>
+
+  </div>
+
+  <div class="info-wide">
+    <h3>📦 INFORMACIÓN DE COMPRA</h3>
+
+    <p><strong>Entrega inmediata:</strong><br>
+    2 a 5 días según ubicación.</p>
+
+    <p><strong>Productos por pedido (PDF):</strong><br>
+    3 a 4 semanas (envío estándar).<br>
+    Envío rápido disponible.</p>
+
+    <p><strong>Pago:</strong><br>
+    65% adelantado / 35% contra entrega.</p>
+
+    <p><strong>Política:</strong><br>
+    No se aceptan devoluciones, salvo fallas de fábrica.</p>
+
+    <p><strong>Contacto:</strong><br>
+    Escríbenos por WhatsApp.</p>
+  </div>
+
+</section>
+
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-logo">
+      <img src="/transparente.png" alt="OTB">
+    </div>
+    <div>📱 +51 961 285 595</div>
+    <div class="socials">
+  <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+  <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+  <a href="https://wa.me/51942320393" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+  <a href="https://tiktok.com" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+</div>
+  </div>
+  <p class="copy">© 2026 OffTheBlock</p>
+</footer>
+
+<div id="toast"></div>
+
+<div class="cart-box" id="cartBox">
+  <h2>Carrito</h2>
+  <ul id="cartItems"></ul>
+  <p>Total: S/ <span id="total">0</span></p>
+  <button class="btn" onclick="checkout()">Pagar</button>
+</div>
+
+<script>
+
+
+
+const moneda = "S/"; /* Lógica de carrito */
+let cart = [];
+
+function addToCart(name, price){
+  cart.push({name, price});
+  renderCart();
+  showToast(name);
+}
+
+function showToast(product){
+  const toast = document.getElementById("toast");
+  toast.innerText = product + " añadido 🛒";
+  toast.classList.add("show");
+
+  setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+function renderCart(){
+  const cartItems = document.getElementById("cartItems");
+  const count = document.getElementById("count");
+  const totalEl = document.getElementById("total");
+
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+    let li = document.createElement("li");
+   li.innerHTML = `
+  <span>${item.name} - ${moneda} ${item.price}</span>
+  <button class="remove-btn" onclick="removeFromCart(${index})">Eliminar</button>
+`;
+    cartItems.appendChild(li);
+  });
+
+  count.innerText = cart.length;
+  totalEl.innerText = total;
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  renderCart();
+}
+
+function toggleCart(){
+  document.getElementById("cartBox").classList.toggle("active");
+}
+
+const cartBox = document.getElementById("cartBox");
+
+let timeout;
+
+cartBox.addEventListener("mouseleave", () => {
+  timeout = setTimeout(() => {
+    cartBox.classList.remove("active");
+  }, 300);
+});
+
+cartBox.addEventListener("mouseenter", () => {
+  clearTimeout(timeout);
+});
+
+function checkout(){
+  let message = "Pedido OffTheBlock:\n";
+  cart.forEach(item => {
+    message += item.name + " - " + moneda + " " + item.price + "\n";
+  });
+  window.open("https://wa.me/51942320393?text=" + encodeURIComponent(message));
+}
+
+function buyWhatsApp(name, price){
+  let message = `Hola, quiero comprar:\n${name} - ${moneda} ${price}`;
+  window.open("https://wa.me/51942320393?text=" + encodeURIComponent(message));
+}
+
+const menu = document.getElementById("menu");
+const icon = document.querySelector(".menu-icon");
+
+icon.addEventListener("click", () => {
+  menu.classList.add("active");
+});
+
+menu.addEventListener("mouseleave", () => {
+  menu.classList.remove("active");
+});
+
+/* BOTON AGREGAR AL CARRITO */
+document.querySelectorAll(".add-cart").forEach(button => {
+
+  button.addEventListener("click", function () {
+
+    const card = this.closest(".card");
+
+    const name = card.querySelector("h3").innerText;
+    const price = parseFloat(card.querySelector(".price").dataset.price);
+
+    addToCart(name, price);
+
+  });
+
+});
+
+
+/* BOTON COMPRAR WHATSAPP */
+document.querySelectorAll(".buy-now").forEach(button => {
+
+  button.addEventListener("click", function () {
+
+    const card = this.closest(".card");
+
+    const name = card.querySelector("h3").innerText;
+    const price = parseFloat(card.querySelector(".price").dataset.price);
+
+    buyWhatsApp(name, price);
+
+  });
+
+});
+
+
+</script>
+</body>
+</html>
