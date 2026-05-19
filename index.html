@@ -297,12 +297,12 @@ section {
 }
 
 /* CARRITO */
-
 .cart-box {
   position: fixed;
   right: 0;
   top: 90px;
   width: 300px;
+  max-width: 100%;
   height: calc(100% - 90px);
   background: #111;
   padding: 20px;
@@ -315,6 +315,17 @@ section {
 
 .cart-box.active {
   transform: translateX(0);
+}
+
+@media (max-width: 768px){
+
+  .cart-box{
+    width: 75vw;
+    top: 70px;
+    height: calc(100vh - 70px);
+    padding: 15px;
+  }
+
 }
 
 /* TOAST */
@@ -493,17 +504,6 @@ html {
   cursor: pointer;
   margin-left: 10px;
   padding: 4px 8px;
-}
-
-@media (max-width: 768px) {
-
-  .cart-box{
-    width: 80% !important;
-    top: 75px;
-    height: calc(100% - 75px);
-    border-radius: 20px 0 0 20px;
-  }
-
 }
   
 </style>
