@@ -1092,7 +1092,13 @@ function removeFromCart(index) {
 }
 
 function toggleCart(){
-  document.getElementById("cartBox").classList.toggle("active");
+
+  event.stopPropagation();
+
+  document
+    .getElementById("cartBox")
+    .classList.toggle("active");
+
 }
 
 document.addEventListener("click", function(e){
@@ -1100,10 +1106,10 @@ document.addEventListener("click", function(e){
   const cartBox = document.getElementById("cartBox");
   const cartBtn = document.querySelector(".cart");
 
-  const clickedInsideCart = cartBox.contains(e.target);
-  const clickedCartBtn = cartBtn.contains(e.target);
-
-  if(!clickedInsideCart && !clickedCartBtn){
+  if(
+    !cartBox.contains(e.target) &&
+    !cartBtn.contains(e.target)
+  ){
     cartBox.classList.remove("active");
   }
 
