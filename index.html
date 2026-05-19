@@ -1095,6 +1095,20 @@ function toggleCart(){
   document.getElementById("cartBox").classList.toggle("active");
 }
 
+document.addEventListener("click", function(e){
+
+  const cartBox = document.getElementById("cartBox");
+  const cartBtn = document.querySelector(".cart");
+
+  const clickedInsideCart = cartBox.contains(e.target);
+  const clickedCartBtn = cartBtn.contains(e.target);
+
+  if(!clickedInsideCart && !clickedCartBtn){
+    cartBox.classList.remove("active");
+  }
+
+});
+
 const cartBox = document.getElementById("cartBox");
 
 let timeout;
