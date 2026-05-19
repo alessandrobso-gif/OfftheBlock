@@ -1101,32 +1101,25 @@ function toggleCart(){
 
 }
 
-document.addEventListener("click", function(e){
+  document.addEventListener("click", function(e){
 
   const cartBox = document.getElementById("cartBox");
   const cartBtn = document.querySelector(".cart");
 
-  if(
-    !cartBox.contains(e.target) &&
-    !cartBtn.contains(e.target)
-  ){
+  const clickedInsideCart = cartBox.contains(e.target);
+  const clickedCartBtn = cartBtn.contains(e.target);
+
+  const clickedInsideMenu = menu.contains(e.target);
+  const clickedMenuBtn = icon.contains(e.target);
+
+  if(!clickedInsideCart && !clickedCartBtn){
     cartBox.classList.remove("active");
   }
 
-});
+  if(!clickedInsideMenu && !clickedMenuBtn){
+    menu.classList.remove("active");
+  }
 
-const cartBox = document.getElementById("cartBox");
-
-let timeout;
-
-cartBox.addEventListener("mouseleave", () => {
-  timeout = setTimeout(() => {
-    cartBox.classList.remove("active");
-  }, 300);
-});
-
-cartBox.addEventListener("mouseenter", () => {
-  clearTimeout(timeout);
 });
 
 function checkout(){
@@ -1145,13 +1138,16 @@ function buyWhatsApp(name, price){
 const menu = document.getElementById("menu");
 const icon = document.querySelector(".menu-icon");
 
-icon.addEventListener("click", () => {
-  menu.classList.add("active");
+icon.addEventListener("click", function(event){
+
+  event.stopPropagation();
+
+  menu.classList.toggle("active");
+
 });
 
-menu.addEventListener("mouseleave", () => {
-  menu.classList.remove("active");
-});
+
+
 
 /* BOTON AGREGAR AL CARRITO */
 document.querySelectorAll(".add-cart").forEach(button => {
