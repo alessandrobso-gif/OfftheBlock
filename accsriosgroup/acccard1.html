@@ -55,7 +55,6 @@
   src: url('../fonts/Bornneo.ttf');
 }
 
-
 .brand-center {
   position: absolute;
   left: 50%;
@@ -630,13 +629,10 @@ body {
 
 </section>
 
-<div id="toast"></div>
-
-
 <footer class="footer">
   <div class="footer-content">
     <div class="footer-logo">
-      <img src="/transparente.webp" alt="OTB">
+      <img src="../transparente.webp" alt="OTB">
     </div>
     <div>📱 +51 961 285 595</div>
 
@@ -651,8 +647,32 @@ body {
   <p class="copy">© 2026 OffTheBlock</p>
 </footer>
 
-
+<div id="toast"></div>
 <script>
+
+//touch//
+const slider = document.querySelector(".image-container");
+
+let startX = 0;
+let endX = 0;
+
+slider.addEventListener("touchstart", e=>{
+    startX = e.touches[0].clientX;
+});
+
+slider.addEventListener("touchend", e=>{
+    endX = e.changedTouches[0].clientX;
+
+    if(startX-endX>50){
+        nextImg();
+    }
+
+    if(endX-startX>50){
+        prevImg();
+    }
+});
+
+
 
 function setImg(index) {
   current = index;
@@ -811,6 +831,5 @@ menu.addEventListener("mouseleave", () => {
 
 
 </script>
-
 </body>
 </html>

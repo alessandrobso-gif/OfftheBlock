@@ -292,10 +292,37 @@ section {
   color: rgba(255,255,255,0.7);
 }
 
-.catalogo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
+.catalogo-grid{
+  display:flex;
+  gap:15px;
+  overflow-x:auto;
+
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+
+.catalogo-grid::-webkit-scrollbar{
+  display:none;
+}
+
+.card{
+  min-width:160px;
+  flex-shrink:0;
+  scroll-snap-align:start;
+}
+
+@media(min-width:768px){
+
+.catalogo-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  overflow:visible;
+}
+
+.card{
+  min-width:auto;
+}
+
 }
 
 /* CARRITO */
@@ -613,7 +640,7 @@ html {
       loading="lazy"
       alt="Nike Jordan 3">
       </a>
-      <h3>Nike SB Vertebrae ISO</h3>
+      <h3>Nike SB Vertebrae</h3>
       <p class="price" data-price="420">S/ 420</p>
 
       <div class="btn-group">

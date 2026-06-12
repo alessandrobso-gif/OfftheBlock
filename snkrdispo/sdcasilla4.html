@@ -651,6 +651,30 @@ body {
 <div id="toast"></div>
 <script>
 
+//touch//
+const slider = document.querySelector(".image-container");
+
+let startX = 0;
+let endX = 0;
+
+slider.addEventListener("touchstart", e=>{
+    startX = e.touches[0].clientX;
+});
+
+slider.addEventListener("touchend", e=>{
+    endX = e.changedTouches[0].clientX;
+
+    if(startX-endX>50){
+        nextImg();
+    }
+
+    if(endX-startX>50){
+        prevImg();
+    }
+});
+
+
+
 function setImg(index) {
   current = index;
   updateImage();
