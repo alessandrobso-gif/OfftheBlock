@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OffTheBlock | Sneakers y Streetwear en Perú</title>
 
-  <link rel="stylesheet" href="styles.css">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -72,6 +70,8 @@ section {
 /* TEXTO CENTRO */
 
 .brand-center {
+  text-decoration: none;
+  cursor: pointer;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -269,6 +269,12 @@ section {
 
 .card:hover img {
   transform: scale(1.05);
+}
+
+@media(min-width:768px){
+  #pants .catalogo-grid{
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  }
 }
 
 .card h3 {
@@ -544,15 +550,17 @@ html {
 
   <div class="navbar">
     <div class="menu-icon">☰</div>
-    <div class="brand-center">OFFTHEBLOCK</div>
-    <div class="cart" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
+    <a class="brand-center" href="index.html" aria-label="Volver al inicio">OFFTHEBLOCK</a>
+    <div class="cart" onclick="toggleCart(event)">🛒 (<span id="count">0</span>)</div>
   </div>
 
   <div class="menu" id="menu">
-    <a href="../index.html">Inicio</a>
-    <a href="../index.html#sneakers">Sneakers</a>
-    <a href="../index.html#accesorios">Accesorios</a>
-    <a href="../index.html#info">Información</a>
+    <a href="index.html">Inicio</a>
+    <a href="#sneakers">Sneakers</a>
+    <a href="#ropa">Ropa</a>
+    <a href="#accesorios">Accesorios</a>
+    <a href="#pants">Pantalones</a>
+    <a href="#info">Información</a>
   </div>
 
 </div>
@@ -567,11 +575,11 @@ html {
   </p>
 
   <div class="exclusive-box">
-   <a href="/catalogoesonomy2026.pdf" target="_blank" class="btn-catalogo eco">
+   <a href="catalogoesonomy2026.pdf" target="_blank" class="btn-catalogo eco">
   📖 Ver Catálogo
 </a>
 
-  <a href="/catalogovip2026.pdf" target="_blank" class="btn-catalogo vip">
+  <a href="catalogovip2026.pdf" target="_blank" class="btn-catalogo vip">
     💎 Catálogo VIP
   </a>
   </div>
@@ -1086,7 +1094,7 @@ html {
 <footer class="footer">
   <div class="footer-content">
     <div class="footer-logo">
-      <img src="/transparente.webp" alt="OTB">
+      <img src="transparente.webp" alt="OTB">
     </div>
     <div>📱 +51 961 285 595</div>
     <div class="socials">
@@ -1156,9 +1164,10 @@ function removeFromCart(index) {
   renderCart();
 }
 
-function toggleCart(){
-
-  event.stopPropagation();
+function toggleCart(event){
+  if (event) {
+    event.stopPropagation();
+  }
 
   document
     .getElementById("cartBox")

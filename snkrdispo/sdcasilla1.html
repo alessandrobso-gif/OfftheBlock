@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Nike Jordan 3 - OffTheBlock</title>
-
-  <link rel="stylesheet" href="styles.css">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -56,6 +53,8 @@
 }
 
 .brand-center {
+  text-decoration: none;
+  cursor: pointer;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -84,10 +83,43 @@ body {
   padding: 20px;
 }
 
+@media (max-width:768px){
+
+.product-page{
+    display:flex;
+    flex-direction:column;
+    width:95%;
+    max-width:95%;
+    margin:100px auto 40px;
+    gap:25px;
+}
+
+.product-images,
+.product-info{
+    width:100%;
+    max-width:100%;
+}
+
+}
+
 /* IMÁGENES */
-.product-images {
-  flex: 1;
-  max-width: 550px;
+.product-images{
+    flex:1;
+    max-width:600px;
+    width:100%;
+}
+
+@media (max-width:768px){
+
+.product-gallery{
+    width:100%;
+}
+
+.product-gallery img{
+    width:100%;
+    height:auto;
+}
+
 }
 
 .product-images img {
@@ -136,8 +168,9 @@ body {
 
 /* INFO */
 
-.product-info {
-  max-width: 400px;
+.product-info{
+    flex:1;
+    max-width:100%;
 }
 
 .product-info h1 {
@@ -159,11 +192,38 @@ body {
   border: 1px solid gold;
 }
 
+@media(max-width:768px){
+
+.product-info h1{
+    font-size:36px;
+}
+
+.price{
+    font-size:28px;
+}
+
+}
+
+
 /* BOTONES */
 
 .actions {
   display: flex;
   gap: 10px;
+}
+
+@media(max-width:768px){
+
+.actions{
+    width:100%;
+}
+
+.actions .btn{
+    flex:1;
+    padding:15px;
+    font-size:16px;
+}
+
 }
 
 .actions .btn {
@@ -208,6 +268,19 @@ body {
   transition: 0.3s;
   position: relative;
 }
+
+@media (max-width:768px){
+
+.image-container{
+    height:500px;
+}
+
+.product-images{
+    max-width:100%;
+}
+
+}
+
 
 .image-container img {
   width: 100%;
@@ -512,6 +585,44 @@ body {
 
 
 
+/* Mobile product polish */
+@media (max-width: 768px) {
+  .product-page {
+    flex-direction: column;
+    width: calc(100% - 28px);
+    max-width: 520px;
+    margin: 100px auto 40px;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .product-images,
+  .product-info {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .image-container {
+    height: min(78vw, 460px);
+  }
+
+  .thumbs {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .actions .btn {
+    flex: 1 1 140px;
+    min-height: 48px;
+    font-size: 15px;
+  }
+}
+
 </style>
 </head>
 
@@ -519,7 +630,7 @@ body {
 
 <div class="navbar">
   <div class="menu-icon" onclick="toggleMenu()">☰</div>
-  <div class="brand-center">OFFTHEBLOCK</div>
+  <a class="brand-center" href="../index.html" aria-label="Volver al inicio">OFFTHEBLOCK</a>
   <div class="cart" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
 </div>
 

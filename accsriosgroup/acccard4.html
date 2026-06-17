@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Nike Jordan 3 - OffTheBlock</title>
-
-  <link rel="stylesheet" href="styles.css">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -56,6 +53,8 @@
 }
 
 .brand-center {
+  text-decoration: none;
+  cursor: pointer;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -520,6 +519,44 @@ body {
 
 
 
+/* Mobile product polish */
+@media (max-width: 768px) {
+  .product-page {
+    flex-direction: column;
+    width: calc(100% - 28px);
+    max-width: 520px;
+    margin: 100px auto 40px;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .product-images,
+  .product-info {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .image-container {
+    height: min(78vw, 460px);
+  }
+
+  .thumbs {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .actions .btn {
+    flex: 1 1 140px;
+    min-height: 48px;
+    font-size: 15px;
+  }
+}
+
 </style>
 </head>
 
@@ -528,7 +565,7 @@ body {
 <div class="menu-container">
   <div class="navbar">
    <div class="menu-icon" onclick="toggleMenu()">☰</div>
-   <div class="brand-center">OFFTHEBLOCK</div>
+   <a class="brand-center" href="../index.html" aria-label="Volver al inicio">OFFTHEBLOCK</a>
    <div class="cart" onclick="toggleCart()">🛒 (<span id="count">0</span>)</div>
   </div>
 
