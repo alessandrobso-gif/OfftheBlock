@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nike Jordan 3 - OffTheBlock</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -546,6 +547,124 @@ body {
     flex: 1 1 140px;
     min-height: 48px;
     font-size: 15px;
+  }
+}
+
+/* Mobile readability polish */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .navbar {
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    transform: none;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .brand-center {
+    max-width: calc(100% - 120px);
+    font-size: 24px;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .menu-icon {
+    padding: 7px;
+    font-size: 20px;
+  }
+
+  .cart {
+    padding: 7px 6px;
+    font-size: 16px;
+  }
+
+  .menu {
+    top: 70px;
+    left: 12px;
+  }
+
+  .product-page {
+    box-sizing: border-box;
+    width: calc(100% - 28px);
+    margin: 90px auto 48px;
+    padding: 0;
+    gap: 24px;
+  }
+
+  .image-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .product-info h1 {
+    margin: 0 0 10px;
+    font-size: 28px;
+    line-height: 1.25;
+  }
+
+  .price {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .size {
+    min-height: 50px;
+    margin: 18px 0;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .actions .btn {
+    min-width: 0;
+    min-height: 50px;
+    padding: 12px 10px;
+    font-size: 15px;
+  }
+
+  .info {
+    padding: 60px 14px;
+  }
+
+  .info h2 {
+    font-size: 26px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .info-card {
+    min-height: 140px;
+    padding: 20px 16px;
+  }
+
+  .info-card h3 {
+    font-size: 18px;
+  }
+
+  .info-card p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .info-wide {
+    width: auto;
+    max-width: none;
+    margin: 28px 0 0;
   }
 }
 
