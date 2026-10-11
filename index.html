@@ -1122,15 +1122,16 @@ document.querySelectorAll(".buy-now").forEach(button => {
         const nombre = crearElemento("h3", producto.name || "Producto CJ");
         nombre.style.cssText = "color:#FFD700;font-size:16px;";
 
-        const precio = crearElemento("p", "Precio: consultar");
-        precio.style.color = "#ddd";
 
-        const nota = crearElemento(
-          "p",
-          "Precio final pendiente de calcular envío y costes."
-        );
-        nota.style.cssText = "font-size:12px;color:#aaa;";
+const precio = crearElemento("p", "Calculando precio...");
+precio.style.cssText = "color:#ddd;font-weight:bold;";
 
+const nota = crearElemento(
+  "p",
+  "Consulta el precio final por WhatsApp. El envío depende del destino."
+);
+nota.style.cssText = "font-size:12px;color:#aaa;";
+        
         tarjeta.append(imagen, nombre, precio, nota);
         grid.appendChild(tarjeta);
       });
