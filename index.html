@@ -1047,5 +1047,113 @@ document.querySelectorAll(".buy-now").forEach(button => {
 
 
 </script>
+  
+
+<!-- CATÁLOGO CJ - OFFTHEBLOCK -->
+<section id="cj-catalogo" style="background:#0a0a0a;color:#fff;padding:40px 20px;">
+  <h2 style="color:#FFD700;text-align:center;">OFFTHEBLOCK | STREETWEAR</h2>
+  <p style="text-align:center;color:#bbb;">Descubre nuestra selección de productos.</p>
+
+  <div style="max-width:320px;margin:20px auto;">
+    <input id="cj-busqueda" type="search"
+      placeholder="Buscar hoodies, ropa, accesorios..."
+      style="box-sizing:border-box;width:100%;padding:12px;border:1px solid #FFD700;background:#151515;color:white;border-radius:6px;">
+    <button id="cj-buscar" type="button"
+      style="margin-top:10px;width:100%;padding:12px;background:#FFD700;color:#000;border:0;font-weight:bold;cursor:pointer;">
+      BUSCAR PRODUCTOS
+    </button>
+  </div>
+
+  <p id="cj-estado" style="text-align:center;color:#ccc;">Cargando productos...</p>
+  <div id="cj-productos"
+    style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;max-width:1100px;margin:auto;">
+  </div>
+</section>
+
+<script>
+(function () {
+  const grid = document.getElementById("cj-productos");
+  const estado = document.getElementById("cj-estado");
+  const busqueda = document.getElementById("cj-busqueda");
+  const boton = document.getElementById("cj-buscar");
+
+  function crearElemento(tag, texto) {
+    const elemento = document.createElement(tag);
+    elemento.textContent = texto || "";
+    return elemento;
+  }
+
+  async function cargarProductos() {
+    const keyword = busqueda.value.trim() || "streetwear";
+    estado.textContent = "Buscando productos...";
+    grid.replaceChildren();
+
+    try {
+      const respuesta = await fetch(
+        "/api/cj-products?keyword=" + encodeURIComponent(keyword)
+      );
+      if (!respuesta.ok) throw new Error("HTTP " + respuesta.status);
+
+      const datos = await respuesta.json();
+      if (!datos.ok || !Array.isArray(datos.products)) {
+        throw new Error("La API no devolvió una lista válida.");
+      }
+
+      if (!datos.products.length) {
+        estado.textContent = "No encontramos productos. Prueba otra búsqueda.";
+        return;
+      }
+
+      datos.products.forEach(function (producto) {
+        const tarjeta = crearElemento("article");
+        tarjeta.style.cssText =
+          "background:#151515;border:1px solid #333;padding:14px;border-radius:8px;";
+
+        const imagen = document.createElement("img");
+        imagen.src = producto.image || "";
+        imagen.alt = producto.name || "Producto OffTheBlock";
+        imagen.loading = "lazy";
+        imagen.style.cssText =
+          "width:100%;height:220px;object-fit:contain;background:#fff;border-radius:5px;";
+
+        imagen.onerror = function () {
+          imagen.style.display = "none";
+        };
+
+        const nombre = crearElemento("h3", producto.name || "Producto CJ");
+        nombre.style.cssText = "color:#FFD700;font-size:16px;";
+
+        const precio = crearElemento("p", "Precio: consultar");
+        precio.style.color = "#ddd";
+
+        const nota = crearElemento(
+          "p",
+          "Precio final pendiente de calcular envío y costes."
+        );
+        nota.style.cssText = "font-size:12px;color:#aaa;";
+
+        tarjeta.append(imagen, nombre, precio, nota);
+        grid.appendChild(tarjeta);
+      });
+
+      estado.textContent =
+        "Mostrando " + datos.products.length + " productos disponibles en la consulta.";
+    } catch (error) {
+      estado.textContent =
+        "No se pudo cargar el catálogo. Comprueba la conexión con CJ.";
+      console.error("Error catálogo CJ:", error);
+    }
+  }
+
+  boton.addEventListener("click", cargarProductos);
+  busqueda.addEventListener("keydown", function (evento) {
+    if (evento.key === "Enter") cargarProductos();
+  });
+
+  cargarProductos();
+})();
+</script>
+
+  
 </body>
 </html>
