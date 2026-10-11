@@ -4,7 +4,7 @@ const CONFIG = {
 
   // Margen de ganancia real sobre el precio de venta.
   // 0.30 = 30%, 0.40 = 40%, 0.50 = 50%.
-  margin: 0.30,
+  margin: 0.35,
 
   // Gastos adicionales por producto, expresados en soles.
   extraCostsPEN: 0,
