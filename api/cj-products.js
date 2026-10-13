@@ -27,6 +27,29 @@ module.exports = async function handler(req, res) {
   );
 
   try {
+    const configResponse = await fetch(
+      `${process.env.VERCEL_URL ? "https" : "https"}://${process.env.VERCEL_URL}/api/cj-config`
+    );
+
+    if (!configResponse.ok) {
+      throw new Error("No se pudo cargar la configuración de precios.");
+    }
+
+    const config = await configResponse.json();
+
+    if (
+      !config.ok ||
+      !Number.isFinite(Number(config.margin)) ||
+      Number(config.margin) < 0 ||
+      Number(config.margin) >= 1 ||
+      !Number.isFinite(Number(config.usdToPEN)) ||
+      Number(config.usdToPEN) <= 0 ||
+      !Number.isFinite(Number(config.extraCostsPEN)) ||
+      Number(config.extraCostsPEN) < 0
+    ) {
+      throw new Error("Configuración de precios inválida.");
+    }
+
     const authResponse = await fetch(
       "https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken",
       {
@@ -78,25 +101,54 @@ module.exports = async function handler(req, res) {
       (group) => group.productList || []
     );
 
+    const margin = Number(config.margin);
+    const usdToPEN = Number(config.usdToPEN);
+    const extraCostsPEN = Number(config.extraCostsPEN);
+
     return res.status(200).json({
       ok: true,
       keyword,
       page,
       total: result?.data?.totalRecords ?? products.length,
-      products: products.map((p) => ({
-        id: p.id,
-        name: p.nameEn,
-        sku: p.sku,
-        image: p.bigImage,
-        priceUSD: p.nowPrice || p.sellPrice,
-        category: p.threeCategoryName || "",
-        inventory: p.warehouseInventoryNum ?? null
-      }))
+      currency: "PEN",
+      margin,
+      usdToPEN,
+      shippingIncluded: false,
+      priceNote: "Precio referencial sin envío internacional ni posibles impuestos.",
+      products: products.map((p) => {
+        const rawPrice = Number(p.nowPrice || p.sellPrice);
+        const validCost = Number.isFinite(rawPrice) && rawPrice > 0;
+
+        const costPEN = validCost
+          ? rawPrice * usdToPEN + extraCostsPEN
+          : null;
+
+        const pricePEN = costPEN !== null
+          ? Math.ceil((costPEN / (1 - margin)) * 100) / 100
+          : null;
+
+        return {
+          id: p.id,
+          name: p.nameEn,
+          sku: p.sku,
+          image: p.bigImage,
+          priceUSD: validCost ? rawPrice : null,
+          costPEN: costPEN !== null
+            ? Math.round(costPEN * 100) / 100
+            : null,
+          pricePEN,
+          priceType: "referencial_sin_envio",
+          category: p.threeCategoryName || "",
+          inventory: p.warehouseInventoryNum ?? null
+        };
+      })
     });
   } catch (error) {
+    console.error("Error en catálogo CJ:", error);
     return res.status(502).json({
       ok: false,
-      message: "Error al consultar el catálogo de CJ."
+      message: "No se pudo cargar el catálogo o calcular los precios."
     });
   }
 };
+
