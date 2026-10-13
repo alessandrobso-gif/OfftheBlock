@@ -28,8 +28,8 @@ module.exports = async function handler(req, res) {
 
   try {
     const configResponse = await fetch(
-      `${process.env.VERCEL_URL ? "https" : "https"}://${process.env.VERCEL_URL}/api/cj-config`
-    );
+  `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host}/api/cj-config`
+);
 
     if (!configResponse.ok) {
       throw new Error("No se pudo cargar la configuración de precios.");
