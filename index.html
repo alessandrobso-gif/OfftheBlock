@@ -745,13 +745,25 @@ html {
 const precio = crearElemento("p", "Precio: consultar por WhatsApp");
 precio.style.cssText = "color:#ddd;font-weight:bold;";
 
-const nota = crearElemento(
-  "p",
-"Precio: consultar por WhatsApp"
-);
+const nota = crearElemento("p","Precio: consultar por WhatsApp");
+const boton = crearElemento("button", "CONSULTAR POR WHATSAPP");
+boton.style.cssText = "width:100%;padding:12px;background:#FFD700;color:#000;border:0;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:12px;";
+
+boton.onclick = function () {
+  const mensaje = encodeURIComponent(
+    "Hola OffTheBlock, quiero consultar el precio de: " +
+    (producto.name || "este producto CJ")
+  );
+
+  window.open(
+    "https://wa.me/51942320393?text=" + mensaje,
+    "_blank"
+  );
+};
+        
 nota.style.cssText = "font-size:12px;color:#aaa;";
         
-        tarjeta.append(imagen, nombre, precio, nota);
+        tarjeta.append(imagen, nombre, precio, nota, boton);
         grid.appendChild(tarjeta);
       });
 
