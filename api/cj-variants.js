@@ -89,13 +89,13 @@ module.exports = async function handler(req, res) {
       });
     }
 
-   const variantes = Array.isArray(detail.data)
-  ? detail.data
-  : Array.isArray(detail.data.list)
-    ? detail.data.list
-    : Array.isArray(detail.data.content)
-      ? detail.data.content
-      : [];
+  
+const data = detail.data;
+
+const variantes = Array.isArray(data.variants)
+  ? data.variants
+  : [];
+
 
     const USD_TO_PEN = 3.60;
     const MARGIN = 0.35;
