@@ -27,28 +27,11 @@ module.exports = async function handler(req, res) {
   );
 
   try {
-    const configResponse = await fetch(
-  `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host}/api/cj-config`
-);
+   
+const margin = 0.35;
+const usdToPEN = 3.60;
+const extraCostsPEN = 0;
 
-    if (!configResponse.ok) {
-      throw new Error("No se pudo cargar la configuración de precios.");
-    }
-
-    const config = await configResponse.json();
-
-    if (
-      !config.ok ||
-      !Number.isFinite(Number(config.margin)) ||
-      Number(config.margin) < 0 ||
-      Number(config.margin) >= 1 ||
-      !Number.isFinite(Number(config.usdToPEN)) ||
-      Number(config.usdToPEN) <= 0 ||
-      !Number.isFinite(Number(config.extraCostsPEN)) ||
-      Number(config.extraCostsPEN) < 0
-    ) {
-      throw new Error("Configuración de precios inválida.");
-    }
 
     const authResponse = await fetch(
       "https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken",
@@ -100,10 +83,6 @@ module.exports = async function handler(req, res) {
     const products = content.flatMap(
       (group) => group.productList || []
     );
-
-    const margin = Number(config.margin);
-    const usdToPEN = Number(config.usdToPEN);
-    const extraCostsPEN = Number(config.extraCostsPEN);
 
     return res.status(200).json({
       ok: true,
