@@ -89,9 +89,12 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const data = detail.data;
-    const variantes = Array.isArray(data.variants)
-      ? data.variants
+   const variantes = Array.isArray(detail.data)
+  ? detail.data
+  : Array.isArray(detail.data.list)
+    ? detail.data.list
+    : Array.isArray(detail.data.content)
+      ? detail.data.content
       : [];
 
     const USD_TO_PEN = 3.60;
