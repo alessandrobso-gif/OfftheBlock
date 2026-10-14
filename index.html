@@ -742,10 +742,21 @@ html {
         nombre.style.cssText = "color:#FFD700;font-size:16px;";
 
 
-const precio = crearElemento("p", "Precio: consultar por WhatsApp");
-precio.style.cssText = "color:#ddd;font-weight:bold;";
 
-const nota = crearElemento("p","Precio: consultar por WhatsApp");
+const precio = crearElemento(
+  "p",
+  producto.pricePEN != null
+    ? "Precio referencial: S/ " + Number(producto.pricePEN).toFixed(2)
+    : "Precio: consultar por WhatsApp"
+);
+precio.style.cssText = "color:#FFD700;font-weight:bold;font-size:18px;";
+
+const nota = crearElemento(
+  "p",
+  "Precio sin envío internacional. Confirma el precio final por WhatsApp."
+);
+
+        
 const boton = crearElemento("button", "CONSULTAR POR WHATSAPP");
 boton.style.cssText = "width:100%;padding:12px;background:#FFD700;color:#000;border:0;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:12px;";
 
