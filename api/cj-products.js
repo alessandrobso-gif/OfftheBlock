@@ -143,12 +143,12 @@ module.exports = async function handler(req, res) {
         };
       })
     });
-  } catch (error) {
-    console.error("Error en catálogo CJ:", error);
-    return res.status(502).json({
-      ok: false,
-      message: "No se pudo cargar el catálogo o calcular los precios."
-    });
-  }
+} catch (error) {
+  console.error("Error en catálogo CJ:", error);
+  return res.status(502).json({
+    ok: false,
+    message: error.message || "Error desconocido"
+  });
+}
 };
 
