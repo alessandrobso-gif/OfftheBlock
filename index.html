@@ -722,7 +722,7 @@ html {
         return;
       }
 
-      
+
 datos.products.forEach(function (producto) {
   const tarjeta = crearElemento("article");
   tarjeta.style.cssText =
@@ -745,15 +745,15 @@ datos.products.forEach(function (producto) {
   const precio = crearElemento(
     "p",
     producto.pricePEN != null
-      ? "Precio referencial: S/ " + Number(producto.pricePEN).toFixed(2)
-      : "Precio: consultar por WhatsApp"
+      ? "Producto: S/ " + Number(producto.pricePEN).toFixed(2)
+      : "Precio del producto por confirmar"
   );
   precio.style.cssText =
     "color:#FFD700;font-weight:bold;font-size:18px;";
 
   const nota = crearElemento(
     "p",
-    "Precio estimado sin envío internacional ni impuestos."
+    "Envío e impuestos se confirman antes del pago."
   );
   nota.style.cssText = "font-size:12px;color:#aaa;";
 
@@ -778,25 +778,49 @@ datos.products.forEach(function (producto) {
 
     grupo.append(label, select);
     opciones.appendChild(grupo);
-
     return select;
   }
 
   const colorSelect = crearSelect("COLOR");
   const tallaSelect = crearSelect("TALLA");
+  const paisSelect = crearSelect("PAÍS DE DESTINO");
 
-  const precioVariante = crearElemento("p", "");
-  precioVariante.style.cssText =
-    "color:#FFD700;font-weight:bold;font-size:16px;";
+  [
+    ["PE", "Perú"],
+    ["CL", "Chile"],
+    ["CO", "Colombia"],
+    ["MX", "México"],
+    ["US", "Estados Unidos"],
+    ["CA", "Canadá"],
+    ["ES", "España"],
+    ["BR", "Brasil"],
+    ["AR", "Argentina"],
+    ["JP", "Japón"]
+  ].forEach(function (pais) {
+    const opcion = document.createElement("option");
+    opcion.value = pais[0];
+    opcion.textContent = pais[1];
+    paisSelect.appendChild(opcion);
+  });
+
+  const envioSelect = crearSelect("MÉTODO DE ENVÍO");
+  const precioEnvio = crearElemento("p", "Elige una variante para consultar el envío.");
+  precioEnvio.style.cssText = "color:#ddd;font-size:13px;";
+
+  const total = crearElemento("p", "Total estimado: pendiente");
+  total.style.cssText = "color:#FFD700;font-size:17px;font-weight:bold;";
 
   const consultarBtn = crearElemento("button", "CONSULTAR POR WHATSAPP");
   consultarBtn.style.cssText =
     "width:100%;padding:12px;background:#FFD700;color:#000;border:0;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:8px;";
 
-  opciones.append(precioVariante, consultarBtn);
+  opciones.append(precioEnvio, total, consultarBtn);
 
   let variantes = [];
   let varianteElegida = null;
+  let envios = [];
+  let precioEnvioElegido = null;
+  let solicitudEnvio = 0;
 
   function interpretarVariante(v) {
     const texto = String(v.options || "").trim();
@@ -810,6 +834,121 @@ datos.products.forEach(function (producto) {
     }
 
     return { color: texto || "Único", talla: "Única" };
+  }
+
+  function actualizarTotal() {
+    const productoPEN = Number(varianteElegida && varianteElegida.pricePEN);
+
+    if (
+      !varianteElegida ||
+      !Number.isFinite(productoPEN) ||
+      productoPEN <= 0 ||
+      precioEnvioElegido === null
+    ) {
+      total.textContent = "Total estimado: pendiente de confirmar";
+      return;
+    }
+
+    total.textContent =
+      "Total estimado: S/ " +
+      (productoPEN + precioEnvioElegido).toFixed(2);
+  }
+
+  async function calcularEnvio() {
+    const numeroSolicitud = ++solicitudEnvio;
+    envios = [];
+    precioEnvioElegido = null;
+    envioSelect.replaceChildren();
+
+    if (!varianteElegida || !varianteElegida.id) {
+      precioEnvio.textContent = "Selecciona una variante.";
+      actualizarTotal();
+      return;
+    }
+
+    precioEnvio.textContent = "Consultando tarifas de CJ...";
+    const opcionCargando = document.createElement("option");
+    opcionCargando.textContent = "Cargando...";
+    envioSelect.appendChild(opcionCargando);
+    envioSelect.disabled = true;
+
+    try {
+      const respuesta = await fetch(
+        "/api/cj-shipping?vid=" +
+          encodeURIComponent(varianteElegida.id) +
+          "&country=" +
+          encodeURIComponent(paisSelect.value)
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok || !datos.ok || !Array.isArray(datos.options)) {
+        throw new Error(datos.error || "No se pudieron obtener tarifas.");
+      }
+
+      if (numeroSolicitud !== solicitudEnvio) return;
+
+      envios = datos.options.filter(function (envio) {
+        return Number.isFinite(Number(envio.shippingPEN)) &&
+          Number(envio.shippingPEN) >= 0;
+      });
+
+      envioSelect.replaceChildren();
+
+      if (!envios.length) {
+        precioEnvio.textContent =
+          "CJ no devolvió métodos disponibles para este destino.";
+        actualizarTotal();
+        return;
+      }
+
+      envios.forEach(function (envio, indice) {
+        const opcion = document.createElement("option");
+        opcion.value = String(indice);
+        opcion.textContent =
+          envio.method + " — S/ " +
+          Number(envio.shippingPEN).toFixed(2) +
+          (envio.days ? " (" + envio.days + " días)" : "");
+        envioSelect.appendChild(opcion);
+      });
+
+      precioEnvio.textContent =
+        "Tarifa estimada de CJ. Puede cambiar antes de la compra.";
+
+      envioSelect.value = "0";
+      actualizarEnvioElegido();
+
+    } catch (error) {
+      if (numeroSolicitud !== solicitudEnvio) return;
+
+      envioSelect.replaceChildren();
+      precioEnvio.textContent =
+        "No se pudo calcular el envío. Consulta por WhatsApp.";
+      console.error("Error de envío:", error);
+      actualizarTotal();
+
+    } finally {
+      if (numeroSolicitud === solicitudEnvio) {
+        envioSelect.disabled = false;
+      }
+    }
+  }
+
+  function actualizarEnvioElegido() {
+    const indice = Number(envioSelect.value);
+    const envio = envios[indice];
+
+    precioEnvioElegido = envio
+      ? Number(envio.shippingPEN)
+      : null;
+
+    if (envio) {
+      precioEnvio.textContent =
+        "Envío: S/ " + precioEnvioElegido.toFixed(2) +
+        (envio.days ? " · " + envio.days + " días estimados" : "");
+    }
+
+    actualizarTotal();
   }
 
   function actualizarSeleccion() {
@@ -841,24 +980,23 @@ datos.products.forEach(function (producto) {
       return interpretarVariante(v).talla === tallaSelect.value;
     }) || null;
 
-    if (!varianteElegida) {
-      precioVariante.textContent = "Precio: consultar por WhatsApp";
-      return;
-    }
-
-    if (varianteElegida.image) {
+    if (varianteElegida && varianteElegida.image) {
       imagen.src = varianteElegida.image;
     }
 
-    precioVariante.textContent =
+    precio.textContent = varianteElegida &&
       varianteElegida.pricePEN != null
-        ? "Precio estimado: S/ " +
+        ? "Producto: S/ " +
           Number(varianteElegida.pricePEN).toFixed(2)
-        : "Precio: consultar por WhatsApp";
+        : "Precio del producto por confirmar";
+
+    calcularEnvio();
   }
 
   colorSelect.addEventListener("change", actualizarSeleccion);
   tallaSelect.addEventListener("change", actualizarSeleccion);
+  paisSelect.addEventListener("change", calcularEnvio);
+  envioSelect.addEventListener("change", actualizarEnvioElegido);
 
   elegirBtn.onclick = async function () {
     if (variantes.length) {
@@ -877,21 +1015,19 @@ datos.products.forEach(function (producto) {
 
       const datosVariantes = await respuesta.json();
 
-      if (!respuesta.ok || !datosVariantes.ok ||
-          !Array.isArray(datosVariantes.variants) ||
-          !datosVariantes.variants.length) {
-        throw new Error("No hay variantes disponibles para mostrar.");
+      if (
+        !respuesta.ok ||
+        !datosVariantes.ok ||
+        !Array.isArray(datosVariantes.variants) ||
+        !datosVariantes.variants.length
+      ) {
+        throw new Error("No se encontraron variantes.");
       }
 
-      variantes = datosVariantes.variants.map(function (v) {
-        return {
-          ...v,
-          ...interpretarVariante(v)
-        };
-      });
+      variantes = datosVariantes.variants;
 
       const colores = [...new Set(variantes.map(function (v) {
-        return v.color;
+        return interpretarVariante(v).color;
       }))];
 
       colores.forEach(function (color) {
@@ -901,9 +1037,9 @@ datos.products.forEach(function (producto) {
         colorSelect.appendChild(opcion);
       });
 
-      actualizarSeleccion();
       opciones.style.display = "block";
       elegirBtn.style.display = "none";
+      actualizarSeleccion();
 
     } catch (error) {
       console.error("Error al cargar variantes:", error);
@@ -916,29 +1052,42 @@ datos.products.forEach(function (producto) {
 
   consultarBtn.onclick = function () {
     if (!varianteElegida) {
-      alert("Selecciona un color y una talla.");
+      alert("Selecciona una variante.");
       return;
     }
 
-    const color = colorSelect.value;
-    const talla = tallaSelect.value;
+    const envio = envios[Number(envioSelect.value)];
 
-    const precioTexto = varianteElegida.pricePEN != null
-      ? "Precio estimado: S/ " +
-        Number(varianteElegida.pricePEN).toFixed(2) +
-        " (sin envío internacional ni impuestos)"
-      : "Precio pendiente de confirmar";
-
-    const mensaje = encodeURIComponent(
-      "Hola OffTheBlock, quiero consultar este producto:\n" +
-      "Producto: " + (producto.name || "Producto CJ") + "\n" +
-      "Color: " + color + "\n" +
-      "Talla: " + talla + "\n" +
-      precioTexto
-    );
+    const mensaje = [
+      "Hola OffTheBlock, quiero consultar este producto:",
+      "Producto: " + (producto.name || "Producto CJ"),
+      "Color: " + interpretarVariante(varianteElegida).color,
+      "Talla: " + interpretarVariante(varianteElegida).talla,
+      "Destino: " + paisSelect.options[paisSelect.selectedIndex].text,
+      "Producto: " + (
+        varianteElegida.pricePEN != null
+          ? "S/ " + Number(varianteElegida.pricePEN).toFixed(2)
+          : "Precio por confirmar"
+      ),
+      "Envío: " + (
+        envio
+          ? envio.method + " — S/ " +
+            Number(envio.shippingPEN).toFixed(2)
+          : "Pendiente de confirmar"
+      ),
+      "Total estimado: " + (
+        envio && varianteElegida.pricePEN != null
+          ? "S/ " + (
+              Number(varianteElegida.pricePEN) +
+              Number(envio.shippingPEN)
+            ).toFixed(2)
+          : "Pendiente de confirmar"
+      ),
+      "Confirmar disponibilidad, tarifa final e impuestos antes del pago."
+    ].join("\n");
 
     window.open(
-      "https://wa.me/51942320393?text=" + mensaje,
+      "https://wa.me/51942320393?text=" + encodeURIComponent(mensaje),
       "_blank"
     );
   };
@@ -954,7 +1103,7 @@ datos.products.forEach(function (producto) {
 
   grid.appendChild(tarjeta);
 });
-
+      
 
       estado.textContent =
         "Mostrando " + datos.products.length + " productos disponibles en la consulta.";
