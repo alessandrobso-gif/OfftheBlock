@@ -1,6 +1,9 @@
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+  res.setHeader(
+    "Cache-Control",
+    "s-maxage=60, stale-while-revalidate=300"
+  );
 
   if (req.method !== "GET") {
     return res.status(405).json({
@@ -27,7 +30,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // Obtener token de acceso de CJ
+    // 1. Obtener token de CJ
     const authResponse = await fetch(
       "https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken",
       {
@@ -59,41 +62,17 @@ module.exports = async function handler(req, res) {
 
     const token = auth.data.accessToken;
 
-    // Consultar todas las variantes del producto
-   
-const detailResponse = await fetch(
-  "https://developers.cjdropshipping.com/api2.0/v1/product/variant/query?pid=" +
-    encodeURIComponent(pid),
-  {
-    method: "GET",
-    headers: {
-      "CJ-Access-Token": token
-    }
-  }
-);
-
-const detail = await detailResponse.json();
-
-if (
-  !detailResponse.ok ||
-  detail.result === false ||
-  !detail.data
-) {
-  console.error("Error de variantes CJ:", detail.message);
-
-  return res.status(502).json({
-    ok: false,
-    error: "CJ no pudo devolver las variantes del producto",
-    cjMessage: detail.message || "Sin mensaje de CJ",
-    cjCode: detail.code || null,
-    requestId: detail.requestId || null
-  });
-}
-
-const data = {
-  variants: Array.isArray(detail.data) ? detail.data : []
-};
-
+    // 2. Consultar variantes del producto
+    const detailResponse = await fetch(
+      "https://developers.cjdropshipping.com/api2.0/v1/product/variant/query?pid=" +
+        encodeURIComponent(pid),
+      {
+        method: "GET",
+        headers: {
+          "CJ-Access-Token": token
+        }
+      }
+    );
 
     const detail = await detailResponse.json();
 
@@ -106,18 +85,25 @@ const data = {
 
       return res.status(502).json({
         ok: false,
-        error: "CJ no pudo devolver las variantes del producto"
+        error: "CJ no pudo devolver las variantes del producto",
+        cjMessage: detail.message || "Sin mensaje de CJ",
+        cjCode: detail.code || null,
+        requestId: detail.requestId || null
       });
     }
 
-  
-const data = detail.data;
+    // 3. Normalizar la respuesta de CJ
+    const data = {
+      variants: Array.isArray(detail.data)
+        ? detail.data
+        : Array.isArray(detail.data.variants)
+          ? detail.data.variants
+          : []
+    };
 
-const variantes = Array.isArray(data.variants)
-  ? data.variants
-  : [];
+    const variantes = data.variants;
 
-
+    // 4. Calcular precios referenciales en soles
     const USD_TO_PEN = 3.60;
     const MARGIN = 0.35;
 
@@ -131,7 +117,9 @@ const variantes = Array.isArray(data.variants)
         : null;
 
       const pricePEN = validPrice
-        ? Math.ceil((priceUSD * USD_TO_PEN / (1 - MARGIN)) * 100) / 100
+        ? Math.ceil(
+            (priceUSD * USD_TO_PEN / (1 - MARGIN)) * 100
+          ) / 100
         : null;
 
       return {
@@ -151,13 +139,13 @@ const variantes = Array.isArray(data.variants)
     return res.status(200).json({
       ok: true,
       pid: pid,
-      name: data.nameEn || data.nameen || "",
       currency: "PEN",
       margin: MARGIN,
       usdToPEN: USD_TO_PEN,
       shippingIncluded: false,
       variants: products
     });
+
   } catch (error) {
     console.error("Error en cj-variants:", error);
 
