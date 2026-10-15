@@ -722,61 +722,239 @@ html {
         return;
       }
 
-      datos.products.forEach(function (producto) {
-        const tarjeta = crearElemento("article");
-        tarjeta.style.cssText =
-          "background:#151515;border:1px solid #333;padding:14px;border-radius:8px;";
+      
+datos.products.forEach(function (producto) {
+  const tarjeta = crearElemento("article");
+  tarjeta.style.cssText =
+    "background:#151515;border:1px solid #333;padding:14px;border-radius:8px;";
 
-        const imagen = document.createElement("img");
-        imagen.src = producto.image || "";
-        imagen.alt = producto.name || "Producto OffTheBlock";
-        imagen.loading = "lazy";
-        imagen.style.cssText =
-          "width:100%;height:220px;object-fit:contain;background:#fff;border-radius:5px;";
+  const imagen = document.createElement("img");
+  imagen.src = producto.image || "";
+  imagen.alt = producto.name || "Producto OffTheBlock";
+  imagen.loading = "lazy";
+  imagen.style.cssText =
+    "width:100%;height:220px;object-fit:contain;background:#fff;border-radius:5px;";
 
-        imagen.onerror = function () {
-          imagen.style.display = "none";
+  imagen.onerror = function () {
+    imagen.style.display = "none";
+  };
+
+  const nombre = crearElemento("h3", producto.name || "Producto CJ");
+  nombre.style.cssText = "color:#FFD700;font-size:16px;";
+
+  const precio = crearElemento(
+    "p",
+    producto.pricePEN != null
+      ? "Precio referencial: S/ " + Number(producto.pricePEN).toFixed(2)
+      : "Precio: consultar por WhatsApp"
+  );
+  precio.style.cssText =
+    "color:#FFD700;font-weight:bold;font-size:18px;";
+
+  const nota = crearElemento(
+    "p",
+    "Precio estimado sin envío internacional ni impuestos."
+  );
+  nota.style.cssText = "font-size:12px;color:#aaa;";
+
+  const elegirBtn = crearElemento("button", "VER TALLAS Y COLORES");
+  elegirBtn.style.cssText =
+    "width:100%;padding:12px;background:#FFD700;color:#000;border:0;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:12px;";
+
+  const opciones = document.createElement("div");
+  opciones.style.cssText = "display:none;margin-top:12px;text-align:left;";
+
+  function crearSelect(etiqueta) {
+    const grupo = document.createElement("div");
+    grupo.style.cssText = "margin-bottom:10px;";
+
+    const label = crearElemento("label", etiqueta);
+    label.style.cssText =
+      "display:block;color:#ddd;font-size:12px;margin-bottom:5px;";
+
+    const select = document.createElement("select");
+    select.style.cssText =
+      "box-sizing:border-box;width:100%;padding:10px;background:#222;color:#fff;border:1px solid #FFD700;border-radius:5px;";
+
+    grupo.append(label, select);
+    opciones.appendChild(grupo);
+
+    return select;
+  }
+
+  const colorSelect = crearSelect("COLOR");
+  const tallaSelect = crearSelect("TALLA");
+
+  const precioVariante = crearElemento("p", "");
+  precioVariante.style.cssText =
+    "color:#FFD700;font-weight:bold;font-size:16px;";
+
+  const consultarBtn = crearElemento("button", "CONSULTAR POR WHATSAPP");
+  consultarBtn.style.cssText =
+    "width:100%;padding:12px;background:#FFD700;color:#000;border:0;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:8px;";
+
+  opciones.append(precioVariante, consultarBtn);
+
+  let variantes = [];
+  let varianteElegida = null;
+
+  function interpretarVariante(v) {
+    const texto = String(v.options || "").trim();
+    const separador = texto.lastIndexOf("-");
+
+    if (separador > 0) {
+      return {
+        color: texto.slice(0, separador).trim(),
+        talla: texto.slice(separador + 1).trim()
+      };
+    }
+
+    return { color: texto || "Único", talla: "Única" };
+  }
+
+  function actualizarSeleccion() {
+    const color = colorSelect.value;
+    const tallaAnterior = tallaSelect.value;
+
+    const disponibles = variantes.filter(function (v) {
+      return interpretarVariante(v).color === color;
+    });
+
+    const tallas = [...new Set(disponibles.map(function (v) {
+      return interpretarVariante(v).talla;
+    }))];
+
+    tallaSelect.replaceChildren();
+
+    tallas.forEach(function (talla) {
+      const opcion = document.createElement("option");
+      opcion.value = talla;
+      opcion.textContent = talla;
+      tallaSelect.appendChild(opcion);
+    });
+
+    if (tallas.includes(tallaAnterior)) {
+      tallaSelect.value = tallaAnterior;
+    }
+
+    varianteElegida = disponibles.find(function (v) {
+      return interpretarVariante(v).talla === tallaSelect.value;
+    }) || null;
+
+    if (!varianteElegida) {
+      precioVariante.textContent = "Precio: consultar por WhatsApp";
+      return;
+    }
+
+    if (varianteElegida.image) {
+      imagen.src = varianteElegida.image;
+    }
+
+    precioVariante.textContent =
+      varianteElegida.pricePEN != null
+        ? "Precio estimado: S/ " +
+          Number(varianteElegida.pricePEN).toFixed(2)
+        : "Precio: consultar por WhatsApp";
+  }
+
+  colorSelect.addEventListener("change", actualizarSeleccion);
+  tallaSelect.addEventListener("change", actualizarSeleccion);
+
+  elegirBtn.onclick = async function () {
+    if (variantes.length) {
+      opciones.style.display = "block";
+      elegirBtn.style.display = "none";
+      return;
+    }
+
+    elegirBtn.disabled = true;
+    elegirBtn.textContent = "CARGANDO VARIANTES...";
+
+    try {
+      const respuesta = await fetch(
+        "/api/cj-variants?pid=" + encodeURIComponent(producto.id)
+      );
+
+      const datosVariantes = await respuesta.json();
+
+      if (!respuesta.ok || !datosVariantes.ok ||
+          !Array.isArray(datosVariantes.variants) ||
+          !datosVariantes.variants.length) {
+        throw new Error("No hay variantes disponibles para mostrar.");
+      }
+
+      variantes = datosVariantes.variants.map(function (v) {
+        return {
+          ...v,
+          ...interpretarVariante(v)
         };
-
-        const nombre = crearElemento("h3", producto.name || "Producto CJ");
-        nombre.style.cssText = "color:#FFD700;font-size:16px;";
-
-
-
-const precio = crearElemento(
-  "p",
-  producto.pricePEN != null
-    ? "Precio referencial: S/ " + Number(producto.pricePEN).toFixed(2)
-    : "Precio: consultar por WhatsApp"
-);
-precio.style.cssText = "color:#FFD700;font-weight:bold;font-size:18px;";
-
-const nota = crearElemento(
-  "p",
-  "Precio sin envío internacional. Confirma el precio final por WhatsApp."
-);
-
-        
-const boton = crearElemento("button", "CONSULTAR POR WHATSAPP");
-boton.style.cssText = "width:100%;padding:12px;background:#FFD700;color:#000;border:0;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:12px;";
-
-boton.onclick = function () {
-  const mensaje = encodeURIComponent(
-    "Hola OffTheBlock, quiero consultar el precio de: " +
-    (producto.name || "este producto CJ")
-  );
-
-  window.open(
-    "https://wa.me/51942320393?text=" + mensaje,
-    "_blank"
-  );
-};
-        
-nota.style.cssText = "font-size:12px;color:#aaa;";
-        
-        tarjeta.append(imagen, nombre, precio, nota, boton);
-        grid.appendChild(tarjeta);
       });
+
+      const colores = [...new Set(variantes.map(function (v) {
+        return v.color;
+      }))];
+
+      colores.forEach(function (color) {
+        const opcion = document.createElement("option");
+        opcion.value = color;
+        opcion.textContent = color;
+        colorSelect.appendChild(opcion);
+      });
+
+      actualizarSeleccion();
+      opciones.style.display = "block";
+      elegirBtn.style.display = "none";
+
+    } catch (error) {
+      console.error("Error al cargar variantes:", error);
+      elegirBtn.textContent = "REINTENTAR CARGA";
+      alert("No se pudieron cargar las variantes. Inténtalo nuevamente.");
+    } finally {
+      elegirBtn.disabled = false;
+    }
+  };
+
+  consultarBtn.onclick = function () {
+    if (!varianteElegida) {
+      alert("Selecciona un color y una talla.");
+      return;
+    }
+
+    const color = colorSelect.value;
+    const talla = tallaSelect.value;
+
+    const precioTexto = varianteElegida.pricePEN != null
+      ? "Precio estimado: S/ " +
+        Number(varianteElegida.pricePEN).toFixed(2) +
+        " (sin envío internacional ni impuestos)"
+      : "Precio pendiente de confirmar";
+
+    const mensaje = encodeURIComponent(
+      "Hola OffTheBlock, quiero consultar este producto:\n" +
+      "Producto: " + (producto.name || "Producto CJ") + "\n" +
+      "Color: " + color + "\n" +
+      "Talla: " + talla + "\n" +
+      precioTexto
+    );
+
+    window.open(
+      "https://wa.me/51942320393?text=" + mensaje,
+      "_blank"
+    );
+  };
+
+  tarjeta.append(
+    imagen,
+    nombre,
+    precio,
+    nota,
+    elegirBtn,
+    opciones
+  );
+
+  grid.appendChild(tarjeta);
+});
+
 
       estado.textContent =
         "Mostrando " + datos.products.length + " productos disponibles en la consulta.";
