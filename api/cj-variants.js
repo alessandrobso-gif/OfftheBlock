@@ -60,19 +60,40 @@ module.exports = async function handler(req, res) {
     const token = auth.data.accessToken;
 
     // Consultar todas las variantes del producto
-    const detailResponse = await fetch(
-      "https://developers.cjdropshipping.com/api2.0/v1/product/productDetail/query",
-      {
-        method: "POST",
-        headers: {
-          "CJ-Access-Token": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          id: pid
-        })
-      }
-    );
+   
+const detailResponse = await fetch(
+  "https://developers.cjdropshipping.com/api2.0/v1/product/variant/query?pid=" +
+    encodeURIComponent(pid),
+  {
+    method: "GET",
+    headers: {
+      "CJ-Access-Token": token
+    }
+  }
+);
+
+const detail = await detailResponse.json();
+
+if (
+  !detailResponse.ok ||
+  detail.result === false ||
+  !detail.data
+) {
+  console.error("Error de variantes CJ:", detail.message);
+
+  return res.status(502).json({
+    ok: false,
+    error: "CJ no pudo devolver las variantes del producto",
+    cjMessage: detail.message || "Sin mensaje de CJ",
+    cjCode: detail.code || null,
+    requestId: detail.requestId || null
+  });
+}
+
+const data = {
+  variants: Array.isArray(detail.data) ? detail.data : []
+};
+
 
     const detail = await detailResponse.json();
 
